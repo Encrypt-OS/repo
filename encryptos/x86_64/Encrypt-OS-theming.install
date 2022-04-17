@@ -1,0 +1,35 @@
+#!/bin/bash
+
+pre_upgrade() {
+    # Remove some files (possible leftovers from other packages).
+
+    local remove=(
+       /usr/share/Encrypt-OS/Encrypt-OS-icon.png
+       /usr/share/Encrypt-OS/Encrypt-OS-logo.png
+       /usr/share/Encrypt-OS/splash.png
+       /usr/share/Encrypt-OS/endeavour-logo-e.png
+       /usr/share/Encrypt-OS/Encrypt-OS-icon-fade.png
+       /usr/share/Encrypt-OS/Encrypt-OS-icon-E.png
+       /usr/share/Encrypt-OS/Encrypt-OS-wallpaper.png
+       /usr/share/Encrypt-OS/backgrounds/Encrypt-OS-wallpaper.png
+    )
+    local xx removed=()
+
+    # Test if the files to be removed really exist.
+    for xx in "${remove[@]}" ; do
+        test -r $xx && removed+=($xx)
+    done
+
+    # Now remove the ones that exist.
+    if [ -n "$removed" ] ; then
+        echo "Removing existing files:" >&2
+        for xx in "${removed[@]}" ; do
+            echo "    $xx" >&2
+            rm -f $xx
+        done
+    fi
+}
+
+pre_install() {
+    pre_upgrade
+}
